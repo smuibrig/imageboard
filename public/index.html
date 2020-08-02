@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+    <title>pixelgrain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id ="main">
+        <div v-infinite-scroll="loadMore">
+            <div class="flex-container">
+                <div id="header">
+                    <h2>pixelgrain 🌾</h2>
+                    <p>upload your favorite images here</p>
+                    <form>
+                        <input v-model='title' type="text" name='title' placeholder='title'>
+                        <input v-model='description' type="text" name='description' placeholder='description'>
+                        <input v-model='username' type="text" name='username' placeholder='username'>
+                        <input class="input-button" @change='handleChange' type="file" name='file' accept='image/*'>
+                        <button id="button-upload" @click='handleClick'>submit</button>
+                    </form>
+                </div>
+            </div>
+    
+            <div class="flex-container">
+                <div class="grid-container">
+                    <div v-for="image in images">
+                        <div class="image">
+                            <img class="img-page" :src="image.url" alt="images" @click="setImageID(image.id)">
+                             <p class="image-title">{{image.title}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- modal component that gets rendered based on id -->
+        <modal-component v-if='imgID' :id='imgID' @close='closeComp'></modal-component>  
+    </div>
+        <!-- Template code OUTSIDE OF MAIN -->
+        <script id='modal-template' type='text/x-template'>
+            <div id="overlay" @click.self="closeModal">
+                <div id="modal">
+                    <h3>The image titled: {{title}}</h3>
+                    <h4>Posted by {{username}}</h4>
+                    <img class="img-modal" :src="url">
+                    <p> Which {{username}} descripes as <em>"{{description}}"</em></p>
+    
+                    <form id="comment-form">
+                        <input v-model="c_username" type="text" placeholder="username">
+                        <input v-model="c_comment" type="text" name="comment" placeholder="add your comment">
+                        <button @click.prevent="submitComment" id="button-modal">Comment</button> 
+                    </form>
+                    <div v-for="comment in comments">
+                        <div class="comment-section">
+                            <p>{{comment.username}} says:</p> 
+                        <p>"{{comment.comment}}"</p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </script>
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/vue-infinite-scroll@2.0.2/vue-infinite-scroll.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
